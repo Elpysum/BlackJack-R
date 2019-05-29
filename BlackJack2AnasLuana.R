@@ -1,22 +1,37 @@
 ####  Bienvenue ###
+####  Welcome ###
+
 ### MERCI DE BIEN LIRE CECI, AVANT DE COMMENCER ###
+### THANKS FOR READING THIS? BEFORE PLAYING ###
 
 ### Vous allez jouer au Black Jack ###
 ### Rules : en fonction de vos parametres, vous allez passer en mode MANUEL ou AUTOMATIQUE###
+### Explication : playBlackJack(limite croupier, limite joueur, nombre joueurs) (voir les rÃ©gles) ###
 ### Pour passer en mode AUTOMATIQUE, exemple: playBlackJack(17,17,1) ###
 ### Pour passer en mode MANUEL, exemple: playBlackJack(17,,4) ---> donc ne completez pas la limite du joueur
-### c'est a vous de trouver vos propres strategies!###
+### C'est a vous de trouver vos propres strategies!###
+
+### You will play Black Jack ###
+### Rules : in fonction of your parametres, you'll pass in MANUAL mode or AUTOMATIC one ###
+### Some explanation : playBlackJack(house limit, player limit, number of players) ###
+### Some explanation : house/player limit = the limit of numbers of each (see the rules) ###
+### For AUTOMATIC, example :  playBlackJack(17,17,1) ###
+### For MANUAL, example : playBlackJack(17,,4) ---> so, donc complete the player limit
+### You'll have to find your own strategy ###
 
 
 ########################## PLAY BLACK JACK ################################################
 playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
 
-  #on definit un vecteur avec tous les points totaux du joueurs
+  #On definit un vecteur avec tous les points totaux du joueurs
+  #We define a vector with the total players numbers
   point.joueur <- rep(NA,n)
   
   #Quelques fonctions bien utiles:
+  #Some usefull functions:
   
   #Calcule les points pour le(s) joueur(s) et pour le croupier
+  #Calculates the points for the players AND the house
   calculPoint <- function(mains, joueur) {
     
     main <- mains[,joueur]
@@ -31,23 +46,26 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
   }
 
   #Affiche les points du croupier et du/des joueur(s), dans un tableau
+  #Shows the points of the house AND players, in a table
   affichagePoints <- function(){
     
     matrice.pts <- matrix(nrow=2, ncol=(n + 1))
     colnames(matrice.pts) <- c("Croupier", paste("Joueur", 1:n))
     rownames(matrice.pts) <- c("Somme totale des points","Status")
     
-    matrice.pts[1,1] <- nb.point  #on indexe les points du croupier
-    matrice.pts[1,(2:(n+1))] <- point.joueur #on indexe les points du joueur
-    matrice.pts[2,(2:(n+1))] <- Status() #on indexe le status
+    matrice.pts[1,1] <- nb.point  #on indexe les points du croupier/we index the house points
+    matrice.pts[1,(2:(n+1))] <- point.joueur #on indexe les points du joueur/we index the players points
+    matrice.pts[2,(2:(n+1))] <- Status() #on indexe le status/we index the Status (Gain, Loss, Equality)
     matrice.pts[2,1] <- "Banque" 
     print(matrice.pts)
   }
 
   #Donne un status a chaque joueur
+  #Gives a status to each player (Gain, Loss, Equality)
   Status <- function(){
     
-   #prend le status des joueurs, par rapport a la banque (gagnant, perdant, egalite)
+   #Prend le status des joueurs, par rapport a la banque (gagnant, perdant, egalite)
+   #Takes the status of players, rapporting to the house (Gain = Gagnant, Loss = Perdant, Equality = EgalitÃ©)
    status <- rep(NA,n)
     
     for (i in 1:n){ 
@@ -64,6 +82,7 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
   
   
   #Une petite fonction qui affiche le jeu
+  #Small function who shows the game
   afficheJeu <- function()
     print(mains[1:tour,])
   
@@ -73,10 +92,11 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
   mains <- matrix(NA, 52, n+1)
   colnames(mains) <- c("Croupier", paste("Joueur", 1:n))
   
-  #la premiere distribution des 2 cartes au croupier et n joueurs
-  mains[1,] <- jeu[1:(n+1)] #distribution 1ere carte
+  #La premiere distribution des 2 cartes au croupier et "n" joueurs
+  #First distribution of 2 cards to the house and "n" players
+  mains[1,] <- jeu[1:(n+1)] #distribution 1ere carte/card
   jeu <- jeu[-(1:(n+1))]
-  mains[2,] <- jeu[1:(n+1)]  #distribution 2eme carte
+  mains[2,] <- jeu[1:(n+1)]  #distribution 2eme carte/card
   jeu <- jeu[-(1:(n+1))]
   
   tour <- 2
@@ -87,39 +107,40 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
   ## Commencons a jouer - LET THE GAME BEGIN ##
   
   ###### Ici c'est le mode MANUEL
+  ###### MANUAL mode
   if (missing(limite.joueur)) { 
     
-    cat("Vous etes passés en mode MANUEL.
+    # You pass in Manual mode, it's up to you to chose the best strategy to gain
+    cat("Vous etes passÃ©s en mode MANUEL.
         C'est a vous de choisir les strategies de chaque joueur!")
     
-    for (i in 1:n) #i c'est le joueur
+    for (i in 1:n) #i c'est le joueur/ i it's the player
     {
       tour <- 3
       
       while (TRUE){
-        veuxCarte <- readline("Prenez-vous une carte ? (Carte / Non) : ")
+        veuxCarte <- readline("Prenez-vous une carte ? (Carte / Non) : ") #You'll chose a card ? Yes / No 
         
         point.joueur[i] <- calculPoint(mains, (i+1))
         
         if (veuxCarte == "Non") {
           break 
         } else if (veuxCarte == "Carte") {
-          
-#          point.joueur[i] <- calculPoint(mains, (i+1))
-          
-          #distribution de carte au joueur i 
+                    
+          #Distribution de carte au joueur "i" 
+          #Card distribution to player "i"
           if (point.joueur[i] <= 21) {         
             mains[tour, (i+1)] <- jeu[1]   
             jeu <- jeu[-1]  
             tour <- tour + 1 
           } else {
-            cat("Tu as perdu. On passe au prochain joueur.")
+            cat("Tu as perdu. On passe au prochain joueur.") #You had lost, we pass to the next player
             break   
           }  
           
           afficheJeu()
         } else {
-          cat("Mauvaise reponse. Re-essayez : Carte/Non")
+          cat("Mauvaise reponse. Re-essayez : Carte/Non") #Bad response, try again : Card/No
         }
       }
     }
@@ -128,6 +149,7 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
     tour <- 3
   
     ## Le croupier joue
+    ## The house plays
     while (TRUE){
       nb.point <- calculPoint(mains, 1)
       
@@ -147,6 +169,7 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
     affichagePoints()
     
 ###### Ici c'est le mode AUTOMATIQUE
+###### Here is the AUTOMATIC mode
     
   } else {
     for (i in 1:n) 
@@ -177,6 +200,7 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
 
 
     ## Le croupier joue
+    ## The house plays
     tour <- 3
     
     while (TRUE){
@@ -207,8 +231,10 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
   
   
   invisible(Status())
-  # ca tourne le Status en mode invisible
-  # pour pouvoir etre utilisé dans le Monte Carlo 
+  # Ca tourne le Status en mode invisible
+  # This turns the Status in invisible mode 
+  # pour pouvoir etre utilisÃ© dans le Monte Carlo 
+  # for being used in the Monte Carlo analysis
 }
 
 
@@ -218,9 +244,10 @@ playBlackJack <- function(limite.croupier,limite.joueur,n, affichage = TRUE){
 
 MonteCarlo <- function(nb.strategies,essais){ 
 
-# nb.strategies = le nb de strategies que vous allez tester; 
-# essais = le nombre de fois que vous allez tourner le code, par strategie
-# la matrice qui va donner le nombre total de gains et la probabilite, par strategie
+# nb.strategies = le nb de strategies que vous allez tester / number of strategies you'll chose to test
+# essais = le nombre de fois que vous allez tourner le code, par strategie / number of times you'll compile the code
+# la matrice qui va donner le nombre total de gains et la probabilite, par strategie 
+  # matrix that gives the total number of gains and probability, per strategy
   
   Comptage <- matrix (0, nrow = nb.strategies, ncol = 4)
   colnames(Comptage) <- c(" Strategie ","Egalite","Gagnant","Perdant")
@@ -230,10 +257,10 @@ MonteCarlo <- function(nb.strategies,essais){
   
   
   for (i in 1:nb.strategies){
-    lim.jou <- as.numeric(readline("Quelle limite pour le joueur? (exemple: 17):"))
+    lim.jou <- as.numeric(readline("Quelle limite pour le joueur? (exemple: 17):")) #Which limit for the player?
     
     
-    Comptage[i,1] <- lim.jou  #la premiere colonne reprz les stratgies
+    Comptage[i,1] <- lim.jou  #la premiere colonne reprz les strategies/ the first column shows the strategies
 
     VecteurGains <- rep(NA,essais)
     
@@ -242,7 +269,7 @@ MonteCarlo <- function(nb.strategies,essais){
       VecteurGains[j] <- playBlackJack(17,lim.jou,1, affichage = FALSE)
     }
     
-    # VecteurGains ordonné E G P
+    # VecteurGains ordonnÃ© E G P
     sorted.vectgains <- as.vector(sort(t(table(VecteurGains)) , 
                                        ord = 0 , decreasing = FALSE )) 
     if ( length(sorted.vectgains) == 2) {
@@ -262,7 +289,7 @@ MonteCarlo <- function(nb.strategies,essais){
 
    print("Voici le nombre de gains en fonction de chaque strategie:")
    prmatrix(Comptage , rowlab=rep("", nb.strategies))
-   print("Voici la probabilité de gain en fonction de chaque strategie:")
+   print("Voici la probabilitÃ© de gain en fonction de chaque strategie:")
    prmatrix(matriceProba , rowlab=rep("", nb.strategies))
    
 
