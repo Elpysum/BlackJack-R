@@ -251,6 +251,7 @@ MonteCarlo <- function(nb.strategies,essais){
   
   Comptage <- matrix (0, nrow = nb.strategies, ncol = 4)
   colnames(Comptage) <- c(" Strategie ","Egalite","Gagnant","Perdant")
+  # strategy, equality, winner, looser
   
   matriceProba <- matrix (0, nrow = nb.strategies, ncol = 4)
   colnames(matriceProba) <- c("Strategie","Egalite","Gagnant","Perdant")
@@ -288,17 +289,20 @@ MonteCarlo <- function(nb.strategies,essais){
    matriceProba[,1] <- Comptage[1:nb.strategies,1]
 
    print("Voici le nombre de gains en fonction de chaque strategie:")
+  # These are the number of gains in fonction of each strategy
    prmatrix(Comptage , rowlab=rep("", nb.strategies))
    print("Voici la probabilité de gain en fonction de chaque strategie:")
+  # These are the probabilities in fonction of each strategy
    prmatrix(matriceProba , rowlab=rep("", nb.strategies))
    
 
-   barplot(t(matriceProba[,2:4]), ylim = c(0, 0.1 + max(matriceProba[,2:4])) 
-           ,main = "Probabilite de gain, par strategie (Monte Carlo)",
+   barplot(t(matriceProba[,2:4]), ylim = c(0, 0.1 + max(matriceProba[,2:4]))  
+           ,main = "Probabilite de gain, par strategie (Monte Carlo)", 
            xlab="Strategies choisies", col=c("white","green","red"), 
            beside=TRUE)
    legend ("topleft",c("Egalite", "Gagnant" , "Perdant"), fill =c("white","green","red"))
-   
+   # main = probability of gain, per strategy 
+   # xlab = chosen strategies
 }
 
 
