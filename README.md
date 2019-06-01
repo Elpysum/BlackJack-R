@@ -17,7 +17,7 @@ Positive points :
 > - The R code it really works 
 
 Negative points : 
-> - Some mistakes are made and aren't corrected in the first rapport. 
+> - Some errors may be in when I tried to translate some things in english, in the R code.
 > - The code may be simplified, but we had no time for that 
 > - The rapport is in french (we will make the english version later, maybe)
 > - Maybe some english mistakes 
